@@ -1,21 +1,62 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { Send, Mail, MapPin, Github, Linkedin, Phone } from 'lucide-react';
+import emailjs from '@emailjs/browser';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 const Contact = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({
+    title: '',
+    to_name: 'Abhishek Chaganti',
+    from_name: '',
+    from_email: '',
+    message: ''
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState('');
+  const [dialogMessage, setDialogMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsSubmitting(false);
-    setFormData({ name: '', email: '', message: '' });
-    alert('Message sent! (This is a demo - connect EmailJS for real functionality)');
+
+    try {
+      await emailjs.send(
+        'service_pxmv0qe',
+        'template_2z7y7q2',
+        {
+          title: formData.title,
+          to_name: 'Abhishek Chaganti',
+          from_name: formData.from_name,
+          from_email: formData.from_email,
+          message: formData.message,
+        },
+        'HavGdl7J3SeM6VI79'
+      );
+
+      setFormData({ title: '', to_name: 'Abhishek Chaganti', from_name: '', from_email: '', message: '' });
+      setDialogTitle('Success');
+      setDialogMessage('Thank you for reaching out! Your message has been received, and I’ll get back to you as soon as possible. Looking forward to connecting!');
+      setDialogOpen(true);
+    } catch (error) {
+      console.error('EmailJS error:', error);
+      setDialogTitle('Error');
+      setDialogMessage('Failed to send message. Please try again or contact me directly.');
+      setDialogOpen(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -24,7 +65,7 @@ const Contact = () => {
 
   const socialLinks = [
     { icon: Github, href: 'https://github.com/abhishekchaganti', label: 'GitHub' },
-    { icon: Linkedin, href: 'https://linkedin.com/in/abhishek-chaganti', label: 'LinkedIn' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/chaganti-abhishek/', label: 'LinkedIn' },
     { icon: Mail, href: 'mailto:abhishekchaganti25@gmail.com', label: 'Email' },
     { icon: Phone, href: 'tel:+919014874227', label: 'Phone' },
   ];
@@ -115,40 +156,58 @@ const Contact = () => {
             </div>
           </motion.div>
 
-          {/* Contact Form */}
-          <motion.form
-            onSubmit={handleSubmit}
-            className="glass rounded-xl p-6"
+          {/* Contact Form - Updated to match screenshot layout */}
+          <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <div className="space-y-4">
+            <form onSubmit={handleSubmit} className="glass rounded-xl p-6 space-y-4">
+              {/* Title Field */}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                  Name
+                <label htmlFor="title" className="block text-sm font-medium text-foreground mb-2">
+                  Title *
                 </label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
+                  id="title"
+                  name="title"
+                  value={formData.title}
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
-                  placeholder="Your name"
+                  placeholder="Subject of your message"
                 />
               </div>
 
+
+              {/* From Name Field */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                  Email
+                <label htmlFor="from_name" className="block text-sm font-medium text-foreground mb-2">
+                  From Name *
+                </label>
+                <input
+                  type="text"
+                  id="from_name"
+                  name="from_name"
+                  value={formData.from_name}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+                  placeholder="Your full name"
+                />
+              </div>
+
+              {/* From Email Field */}
+              <div>
+                <label htmlFor="from_email" className="block text-sm font-medium text-foreground mb-2">
+                  From Email *
                 </label>
                 <input
                   type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
+                  id="from_email"
+                  name="from_email"
+                  value={formData.from_email}
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
@@ -156,9 +215,10 @@ const Contact = () => {
                 />
               </div>
 
+              {/* Message Field */}
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                  Message
+                  Message *
                 </label>
                 <textarea
                   id="message"
@@ -168,7 +228,7 @@ const Contact = () => {
                   required
                   rows={5}
                   className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all resize-none"
-                  placeholder="Your message..."
+                  placeholder="Tell me about your project or inquiry..."
                 />
               </div>
 
@@ -194,10 +254,22 @@ const Contact = () => {
                   </span>
                 )}
               </motion.button>
-            </div>
-          </motion.form>
+            </form>
+          </motion.div>
         </div>
       </div>
+
+      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{dialogTitle}</AlertDialogTitle>
+            <AlertDialogDescription>{dialogMessage}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setDialogOpen(false)}>OK</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </section>
   );
 };

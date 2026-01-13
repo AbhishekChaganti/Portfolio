@@ -25,7 +25,7 @@ const Footer = () => {
           <div className="flex gap-6">
             {[
               { icon: Github, href: 'https://github.com/abhishekchaganti', label: 'GitHub' },
-              { icon: Linkedin, href: 'https://linkedin.com/in/abhishek-chaganti', label: 'LinkedIn' },
+              { icon: Linkedin, href: 'https://www.linkedin.com/in/chaganti-abhishek/', label: 'LinkedIn' },
               { icon: Mail, href: 'mailto:abhishekchaganti25@gmail.com', label: 'Email' },
             ].map(({ icon: Icon, href, label }) => (
               <motion.a

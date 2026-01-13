@@ -7,24 +7,21 @@ const projects = [
     title: 'Movie HUB',
     description: 'A comprehensive Django movie platform with 9,000+ titles, advanced search and filtering, user authentication, and personalized watchlists. Optimized database for scale with efficient indexing.',
     technologies: ['Django', 'SQLite', 'Bootstrap', 'Docker', 'JavaScript'],
-    github: 'https://github.com/abhishekchaganti/movie-hub',
-    demo: '#',
+    github: 'https://github.com/AbhishekChaganti/MovieHUB',
     featured: true,
   },
   {
     title: 'Online Food Ordering System',
     description: 'Full-stack food ordering platform featuring 30+ menu items, responsive UI, shopping cart functionality, and streamlined checkout process achieving 25% faster order completion.',
     technologies: ['Django', 'HTML/CSS', 'JavaScript', 'SQLite', 'Docker'],
-    github: 'https://github.com/abhishekchaganti/food-ordering',
-    demo: '#',
+    github: 'https://github.com/AbhishekChaganti/Eatzy',
     featured: true,
   },
   {
     title: 'Career Suggestions Platform',
     description: 'AI-powered career guidance system integrated with OpenAI API, serving 500+ user profiles with personalized recommendations. Features normalized database schemas for optimal performance.',
     technologies: ['Django', 'OpenAI API', 'Bootstrap', 'SQLite', 'Docker'],
-    github: 'https://github.com/abhishekchaganti/career-suggestions',
-    demo: '#',
+    github: 'https://github.com/AbhishekChaganti/CareerSegg',
     featured: true,
   },
 ];
@@ -56,16 +53,6 @@ const ProjectCard = ({ project, index }: { project: typeof projects[0]; index: n
             whileTap={{ scale: 0.95 }}
           >
             <Github size={20} />
-          </motion.a>
-          <motion.a
-            href={project.demo}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-background/80 flex items-center justify-center text-foreground hover:text-primary transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <ExternalLink size={20} />
           </motion.a>
         </div>
       </div>
